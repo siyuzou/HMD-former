@@ -1,0 +1,19 @@
+exe:
+  # user specific
+  gpu_ids: [0]
+  seed: -1
+  deterministic: false
+  output_dir:
+  dry_run: false
+  mode: "test" # {train, test, infer}
+  log_on_iter: false
+  debug: false
+
+  # auto generate
+  init_time:
+  start_epoch:
+  model_dir:
+  log_dir:
+  summary_dir:
+  vis_dir:
+  code_dir:

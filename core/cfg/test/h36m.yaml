@@ -1,0 +1,58 @@
+exe:
+  workers_test: 0
+
+dataset:
+  valid:
+    cls: 'core.data.dataset.Human36M_test.Human36M_test'
+    root: 'data/dataset/Human3.6M_test'
+    split: valid
+
+net:
+  cls: 'core.net.main.model_hmd_former.Model'
+
+  model_paths:
+    hmd_former: 'data/snap/h36m.pth'
+
+  ##### core module of HMD-former
+  hmd_former:
+    ##### backbone
+    backbone:
+      cls: 'core.net.sub.backbone.resnet.resnet50.ResNet50'
+      num_scales: 1
+
+    ##### duplex embed mapping
+    duplex_mapping:
+      cls: 'core.net.sub.hmd_former.mapping.DuplexLinear'
+      in_features: 3
+      out_features: 512
+
+    ##### transformer
+    transformer:
+      cls: 'core.net.sub.attention.transformer.Transformer'
+      feature_map_size: [7]
+      feature_map_depth: [2048]
+      given_D_up: True
+      dec_layer_form: 'SA-CA-FFD'
+      pre_norm: True
+      use_PE_enc: True
+
+    ##### mesh upsampler
+    mesh_up:
+      cls: 'core.net.sub.hmd_former.mesh_upsampler.MeshUpsampler'
+      D_vtx: 512
+      given_D_down: True
+      mesh_up_type: 'mlp'  # static, metro, mlp, 2fc
+
+    ##### args for hmd-former
+    train_D_up: False
+    train_D_down: True
+    auxiliary_loss_layers: 6
+    J_types_full: ['Human36M', 'MSCOCO']
+
+  smpl:
+    root: 'data/model/smpl'
+    only_neutral: false
+
+
+valid:
+  batch_size: 32
